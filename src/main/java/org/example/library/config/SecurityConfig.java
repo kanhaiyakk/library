@@ -31,6 +31,7 @@ public class SecurityConfig {
                 .authorizeRequests()
                 .requestMatchers(HttpMethod.GET).permitAll()
                 .requestMatchers("/auth/login").permitAll()
+                .requestMatchers("/auth/student/login").permitAll()
                 .anyRequest()
                 .authenticated()
                 .and().exceptionHandling(ex -> ex.authenticationEntryPoint(point))
