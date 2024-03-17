@@ -1,10 +1,10 @@
 package org.example.library.dto;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,14 +18,26 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BookDto {
+
+    @NotNull
+    @Digits(integer = 4, fraction = 0, message = "Please enter a valid bookId")
+    @Column(unique = true)
+    @Min(value = 1, message = "bookId must be 1 digits ")
+    @Max(value = 9999, message = "bookId must be four digits")
+    @Positive(message = "bookId must be greater than zero")
+    private int bookId;
     @NotEmpty
-    @NotBlank
+    @NotBlank(message = "book name should not be empty")
     private String bookName;
 
-    @NotBlank(message ="book author should not be balnk")
+    @NotBlank(message ="book author should not be blank")
     private String bookAuthor;
 
-    @NotBlank(message = "please enter a book year")
+
+    @NotNull(message = "please enter a year")
+    @Digits(integer = 4, fraction = 0, message = "Please enter a valid four-digit year")
+    @Min(value = 1000, message = "Year must be four digits ")
+    @Max(value = 9999, message = "Year must be four digits")
     private int bookYear;
 
 
