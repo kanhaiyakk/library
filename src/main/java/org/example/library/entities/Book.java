@@ -35,4 +35,16 @@ public class Book {
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "books_roll")
     private Student student;
+
+    @Override
+    public String toString() {
+        return "Book{" +
+                "bookId=" + bookId +
+                ", bookName='" + bookName + '\'' +
+                ", bookAuthor='" + bookAuthor + '\'' +
+                ", bookYear=" + bookYear +
+                ", dateOfIssue=" + DateOfIssue +
+                ", dateOfSubmission=" + DateOfSubmission +
+                '}';
+    }
 }

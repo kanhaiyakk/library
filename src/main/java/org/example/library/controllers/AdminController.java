@@ -2,6 +2,8 @@ package org.example.library.controllers;
 
 import jakarta.validation.Valid;
 import org.example.library.dto.AdminDto;
+import org.example.library.dto.BookDto;
+import org.example.library.dto.StudentDto;
 import org.example.library.service.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -26,6 +28,13 @@ public class AdminController {
     public ResponseEntity<AdminDto> getAdmin(@PathVariable("adminId") Integer adminId) {
         AdminDto getAdmin = this.adminService.getAdmin(adminId);
         return new ResponseEntity<>(getAdmin, HttpStatus.OK);
+
+    }
+    @PostMapping("/issue")
+    public  ResponseEntity<StudentDto> issueBook(@Valid @RequestBody BookDto bookDto, @RequestParam("id") Integer id){
+        StudentDto studentDto = this.adminService.issueBook(id, bookDto);
+        return new ResponseEntity<>(studentDto,HttpStatus.CREATED);
+
 
     }
 }

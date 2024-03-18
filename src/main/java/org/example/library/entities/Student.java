@@ -81,4 +81,14 @@ public class Student implements  UserDetails {
     public boolean isEnabled() {
         return true;
     }
+    @Override
+    public String toString() {
+        return "Student{" +
+                "roll=" + roll +
+                ", name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                '}';
+    }
 }

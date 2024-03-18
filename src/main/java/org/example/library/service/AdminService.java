@@ -1,6 +1,8 @@
 package org.example.library.service;
 
 import org.example.library.dto.AdminDto;
+import org.example.library.dto.BookDto;
+import org.example.library.dto.StudentDto;
 
 public interface AdminService {
 
@@ -9,5 +11,7 @@ public interface AdminService {
     AdminDto getAdmin(Integer id);
     public boolean MatchingAdminName(String adminName);
     public boolean MatchingAdminPassword(String password);
+
+    StudentDto issueBook(Integer id, BookDto bookDto);
 
 }
