@@ -1,5 +1,6 @@
 package org.example.library.service;
 
+import org.example.library.dto.StudentDto;
 import org.example.library.entities.Admin;
 //import org.example.library.entities.Role;
 import org.example.library.entities.Student;
@@ -25,24 +26,20 @@ public class CustomUserDetailService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        Admin admin = this.adminRepository.findByAdminEmail(username).orElse(null);
+        Student student = this.studentRepository.findByEmail(username).orElse(null);
 
-        // loading user from database by username
-        Admin admin = this.adminRepository.findByAdminEmail(username).orElseThrow(() -> new RuntimeException("user not found"));
-        Student student = this.studentRepository.findByEmail(username).orElseThrow(() -> new ResourceNotFoundException("user", "ss", 1));
-        if(admin!=null){
+        if (admin != null) {
             return User.withUsername(admin.getAdminEmail())
                     .password(admin.getAdminPassword())
                     .build();
+        } else if (student != null) {
+            return User.withUsername(student.getEmail())
+                    .password(student.getPassword())
+                    .build();
+        } else {
+            throw new UsernameNotFoundException("User not found with username: " + username);
         }
-        else{
-            if(student!=null){
-                return  User.withUsername(student.getEmail())
-                        .password(student.getPassword())
-                        .build();
-            }
 
-
-        }
-        return  null;
     }
 }
