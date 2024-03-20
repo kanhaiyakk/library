@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -74,16 +75,18 @@ public class AdminServiceImp implements AdminService {
             Book book = modelMapper.map(bookDto, Book.class);
             if(this.bookRepository.existsByBookId(book.getBookId())){
                 Book book1 = this.bookRepository.findById(book.getBookId()).orElseThrow(() -> new ResourceNotFoundException("book", "bookId", book.getBookId()));
-                if(book1.getDateOfIssue()!=null){
+                if(book1.getDateOfIssue()!=null && book1.getDateOfSubmission()==null){
                     throw  new ApiException("Book is already assigned");
                 }else{
                     book1.setDateOfIssue(LocalDate.now());
                     book1.setStudent(student);
+                    book1.setDateOfSubmission(null);
                     Book save = this.bookRepository.save(book1);
                     return modelMapper.map(student,StudentDto.class);
                 }
 
             }else{
+
                 book.setStudent(student);
                 book.setDateOfIssue(LocalDate.now());
                 Book save = this.bookRepository.save(book);
@@ -95,6 +98,45 @@ public class AdminServiceImp implements AdminService {
             throw  new ApiException(e.getMessage());
         }
 
+
+    }
+
+    @Override
+    public StudentDto getStudentDetails(Integer roll) {
+        Student student = this.studentRepository.findById(roll)
+                .orElseThrow(() -> new ResourceNotFoundException("student ", "student id", roll));
+
+        return modelMapper.map(student,StudentDto.class);
+
+
+
+    }
+
+    @Override
+    public StudentDto submitBook(Integer bookId,Integer roll) {
+        Book book = this.bookRepository.findById(bookId)
+                .orElseThrow(() -> new ResourceNotFoundException("book", "bookId", bookId));
+
+        Student student = this.studentRepository.findById(roll).orElseThrow(() -> new ResourceNotFoundException("student", "studendId", roll));
+        try{
+            Student student1 = book.getStudent();
+
+            if(Objects.equals(student1.getRoll(), student.getRoll())){
+                if(book.getDateOfSubmission()!=null){
+                    throw  new ApiException("book is already submitted");
+                }else{
+                    book.setDateOfSubmission(LocalDate.now());
+                    Book book1 = this.bookRepository.save(book);
+                }
+
+            }else{
+                throw  new Exception("this book is not associated with this student");
+            }
+
+        }catch (Exception e){
+            throw new ApiException("error in submitting book. "+e.getMessage());
+        }
+        return modelMapper.map(student,StudentDto.class);
 
     }
 }

@@ -14,4 +14,8 @@ public interface AdminService {
 
     StudentDto issueBook(Integer id, BookDto bookDto);
 
+    StudentDto getStudentDetails(Integer roll);
+
+    StudentDto submitBook(Integer bookId,Integer roll);
+
 }

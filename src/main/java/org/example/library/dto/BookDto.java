@@ -41,7 +41,10 @@ public class BookDto {
     private int bookYear;
 
 
+    private LocalDate DateOfIssue;
 
-    private StudentDto studentDto;
+    private LocalDate DateOfSubmission;
+
+
 
 }

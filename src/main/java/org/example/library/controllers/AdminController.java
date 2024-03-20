@@ -31,10 +31,21 @@ public class AdminController {
 
     }
     @PostMapping("/issue")
-    public  ResponseEntity<StudentDto> issueBook(@Valid @RequestBody BookDto bookDto, @RequestParam("id") Integer id){
+    public  ResponseEntity<StudentDto> issueBook(@Valid @RequestBody BookDto bookDto, @RequestParam("roll") Integer id){
         StudentDto studentDto = this.adminService.issueBook(id, bookDto);
         return new ResponseEntity<>(studentDto,HttpStatus.CREATED);
 
 
+    }
+    @GetMapping("/student/details")
+    public  ResponseEntity<StudentDto> getStudentDetails(@RequestParam("roll") Integer roll){
+        StudentDto studentDetails = this.adminService.getStudentDetails(roll);
+        return new ResponseEntity<>(studentDetails,HttpStatus.OK);
+
+    }
+    @PostMapping("/submit/book")
+    public  ResponseEntity<StudentDto> submitBook(@RequestParam("bookId")Integer bookId, @RequestParam("roll") Integer roll){
+        StudentDto studentDto = this.adminService.submitBook(bookId, roll);
+        return  new ResponseEntity<>(studentDto,HttpStatus.OK);
     }
 }
