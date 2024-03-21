@@ -1,6 +1,7 @@
 package org.example.library.serviceImplementation;
 
 import org.example.library.dto.BookDto;
+import org.example.library.dto.StudentDto;
 import org.example.library.entities.Book;
 import org.example.library.exceptions.ApiException;
 import org.example.library.exceptions.ResourceNotFoundException;
@@ -52,7 +53,13 @@ public class BookServiceImp implements BookService {
     @Override
     public BookDto getBookById(Integer id) {
         Book book = this.bookRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("book", "bookId", id));
-        return modelMapper.map(book,BookDto.class);
+        System.out.println(book.getStudent());
+        BookDto map = modelMapper.map(book, BookDto.class);
+        map.setStudentDto(modelMapper.map(book.getStudent(), StudentDto.class));
+        return map;
+
+
+
 
     }
 

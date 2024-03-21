@@ -22,6 +22,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class AdminServiceImp implements AdminService {
@@ -70,13 +72,13 @@ public class AdminServiceImp implements AdminService {
 
     @Override
     public StudentDto issueBook(Integer id,BookDto bookDto) {
-        try{
+
             Student student = this.studentRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("student not found ","student roll",id));
             Book book = modelMapper.map(bookDto, Book.class);
             if(this.bookRepository.existsByBookId(book.getBookId())){
                 Book book1 = this.bookRepository.findById(book.getBookId()).orElseThrow(() -> new ResourceNotFoundException("book", "bookId", book.getBookId()));
                 if(book1.getDateOfIssue()!=null && book1.getDateOfSubmission()==null){
-                    throw  new ApiException("Book is already assigned");
+                    throw  new ApiException("Book is already assigned to  roll no "+ book1.getStudent().getRoll());
                 }else{
                     book1.setDateOfIssue(LocalDate.now());
                     book1.setStudent(student);
@@ -93,11 +95,6 @@ public class AdminServiceImp implements AdminService {
                 return modelMapper.map(student,StudentDto.class);
 
             }
-
-        }catch (Exception e){
-            throw  new ApiException(e.getMessage());
-        }
-
 
     }
 
@@ -138,5 +135,12 @@ public class AdminServiceImp implements AdminService {
         }
         return modelMapper.map(student,StudentDto.class);
 
+    }
+
+    @Override
+    public List<AdminDto> getAllAdmins() {
+        List<AdminDto> adminDto = this.adminRepository.findAll()
+                .stream().map((admin) -> this.modelMapper.map(admin, AdminDto.class)).collect(Collectors.toList());
+        return adminDto;
     }
 }

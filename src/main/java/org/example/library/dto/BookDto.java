@@ -45,6 +45,8 @@ public class BookDto {
 
     private LocalDate DateOfSubmission;
 
+    private StudentDto studentDto;
+
 
 
 }

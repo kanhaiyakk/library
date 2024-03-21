@@ -4,6 +4,8 @@ import org.example.library.dto.AdminDto;
 import org.example.library.dto.BookDto;
 import org.example.library.dto.StudentDto;
 
+import java.util.List;
+
 public interface AdminService {
 
     AdminDto createAdmin(AdminDto adminDto);
@@ -17,5 +19,6 @@ public interface AdminService {
     StudentDto getStudentDetails(Integer roll);
 
     StudentDto submitBook(Integer bookId,Integer roll);
+    List<AdminDto> getAllAdmins();
 
 }

@@ -46,6 +46,6 @@ public class StudentDto {
     private String phoneNumber;
 
 
-    private List<BookDto> books= new ArrayList<>();
+    private List<BookDto> booksDto= new ArrayList<>();
 
 }

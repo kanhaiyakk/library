@@ -11,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/admin")
 public class AdminController {
@@ -47,5 +49,10 @@ public class AdminController {
     public  ResponseEntity<StudentDto> submitBook(@RequestParam("bookId")Integer bookId, @RequestParam("roll") Integer roll){
         StudentDto studentDto = this.adminService.submitBook(bookId, roll);
         return  new ResponseEntity<>(studentDto,HttpStatus.OK);
+    }
+    @GetMapping("/all")
+    public ResponseEntity<List<AdminDto>> getAllAdmins(){
+        List<AdminDto> allAdmins = this.adminService.getAllAdmins();
+        return new ResponseEntity<>(allAdmins,HttpStatus.OK);
     }
 }

@@ -32,6 +32,8 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.GET).permitAll()
                 .requestMatchers("/auth/login").permitAll()
                 .requestMatchers("/auth/student/login").permitAll()
+                .requestMatchers("/api/student/").permitAll()
+                .requestMatchers("/api/admin/").permitAll()
                 .anyRequest()
                 .authenticated()
                 .and().exceptionHandling(ex -> ex.authenticationEntryPoint(point))
