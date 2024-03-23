@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 
 @Service
@@ -60,9 +61,15 @@ public class StudentServiceImp implements StudentService {
     @Override
     public StudentDto getStudentById(Integer id) {
         Student student = this.studentRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("student", "studen id", id));
-        System.out.println(student.getBooks());
+
+        int count = (int)student.getBooks().stream()
+                .filter(book -> book.getDateOfSubmission() == null)
+                .count();
+
+
         StudentDto map = modelMapper.map(student, StudentDto.class);
         map.setBooksDto(student.getBooks().stream().map((book)-> this.modelMapper.map(book, BookDto.class)).collect(Collectors.toList()));
+        System.out.println(map.getNoOfBookIssue());
         return  map;
 
     }
@@ -71,9 +78,15 @@ public class StudentServiceImp implements StudentService {
     @Override
     public List<StudentDto> getAllStudents() {
         List<Student> allStudent = this.studentRepository.findAll();
-        List<StudentDto> studentsDto = allStudent.stream().map(student -> this.modelMapper.map(student, StudentDto.class)).collect(Collectors.toList());
 
-        return studentsDto;
+        List<StudentDto> studentDto1 = allStudent.stream().map(student -> {
+            StudentDto studentDto = this.modelMapper.map(student, StudentDto.class);
+            List<BookDto> bookDto = student.getBooks().stream().map(book -> this.modelMapper.map(book, BookDto.class)).collect(Collectors.toList());
+            studentDto.setBooksDto(bookDto);
+            return studentDto;
+        }).collect(Collectors.toList());
+
+        return studentDto1;
 
     }
 

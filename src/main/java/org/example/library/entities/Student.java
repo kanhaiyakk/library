@@ -1,10 +1,7 @@
 package org.example.library.entities;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -41,7 +38,14 @@ public class Student implements  UserDetails {
 
     @Column(unique = true)
 
+    @NotBlank(message = "Enter Valid Mobile Number")
+    @Pattern(regexp = "(^$|[0-9]{10})")
+    @Pattern(regexp = "\\d{10}", message = "Phone number must be 10 digits")
     private String phoneNumber;
+
+
+    @NotNull(message = "please enter number of book issue")
+    private int noOfBookIssue;
 
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "student")

@@ -3,10 +3,7 @@ package org.example.library.dto;
 
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -44,6 +41,9 @@ public class StudentDto {
     @Pattern(regexp = "(^$|[0-9]{10})")
     @Pattern(regexp = "\\d{10}", message = "Phone number must be 10 digits")
     private String phoneNumber;
+
+    @NotNull(message = "no of issue book can't be empty")
+    private int noOfBookIssue;
 
 
     private List<BookDto> booksDto= new ArrayList<>();

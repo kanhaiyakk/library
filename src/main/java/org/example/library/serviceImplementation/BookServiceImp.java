@@ -72,7 +72,12 @@ public class BookServiceImp implements BookService {
     public List<BookDto> getAllBooks() {
 
         List<Book> all = this.bookRepository.findAll();
-        List<BookDto> collect = all.stream().map((book) -> this.modelMapper.map(book, BookDto.class)).collect(Collectors.toList());
-        return collect;
+        List<BookDto> booksDto = all.stream().map((book) -> {
+            StudentDto studentDto = this.modelMapper.map(book.getStudent(), StudentDto.class);
+            BookDto bookDto = this.modelMapper.map(book, BookDto.class);
+            bookDto.setStudentDto(studentDto);
+            return bookDto;
+        }).collect(Collectors.toList());
+        return booksDto;
     }
 }
