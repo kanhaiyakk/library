@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 
+import org.example.library.exceptions.ApiException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -51,25 +52,40 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             try {
 
                 username = this.jwtHelper.getUsernameFromToken(token);
+                logger.info("userName: "+username);
+                logger.info("token: "+token);
+
 
             } catch (IllegalArgumentException e) {
-                System.out.println("Illegal Argument while fetching the username !!");
                 logger.info("Illegal Argument while fetching the username !!");
-                e.printStackTrace();
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                response.getWriter().write("Illegal Argument while fetching the username !!");
+                return;
             } catch (ExpiredJwtException e) {
                 logger.info("Given jwt token is expired !!");
-                e.printStackTrace();
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                response.getWriter().write("Given jwt token is expired !!");
+                return;
             } catch (MalformedJwtException e) {
                 logger.info("Some changed has done in token !! Invalid Token");
-                e.printStackTrace();
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                response.getWriter().write("Some changed has done in token !! Invalid Token !! please login first.");
+                return;
+//                throw  new ApiException("Some changed has done in token !! Invalid Token");
             } catch (Exception e) {
-                e.printStackTrace();
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                response.getWriter().write("Invalid Token.");
+                return;
+
 
             }
 
 
         } else {
             logger.info("Invalid Header Value !! ");
+//            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+//            response.getWriter().write("Invalid Header Value !!");
+//            return;
         }
 
 
@@ -80,16 +96,23 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             //fetch user detail from username
             UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
             Boolean validateToken = this.jwtHelper.validateToken(token, userDetails);
+            logger.info("userDetails: "+userDetails);
+            logger.info("validateToken: "+validateToken);
+
             if (validateToken) {
 
                 //set the authentication
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+                logger.info("authentication: "+authentication);
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authentication);
 
 
             } else {
-                System.out.println("validation fails");
+                logger.info("validation fails");
+//                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+//                response.getWriter().write("Validation fails !!");
+//                return;
 //                logger.info("Validation fails !!");
             }
 

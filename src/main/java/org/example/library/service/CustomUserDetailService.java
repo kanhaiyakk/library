@@ -4,6 +4,7 @@ import org.example.library.dto.StudentDto;
 import org.example.library.entities.Admin;
 //import org.example.library.entities.Role;
 import org.example.library.entities.Student;
+import org.example.library.exceptions.ApiException;
 import org.example.library.exceptions.ResourceNotFoundException;
 import org.example.library.repositories.AdminRepository;
 import org.example.library.repositories.StudentRepository;
@@ -38,7 +39,7 @@ public class CustomUserDetailService implements UserDetailsService {
                     .password(student.getPassword())
                     .build();
         } else {
-            throw new UsernameNotFoundException("User not found with username: " + username);
+            throw new ApiException("User not found with username: " + username);
         }
 
     }

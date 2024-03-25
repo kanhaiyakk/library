@@ -12,6 +12,7 @@ import org.example.library.repositories.AdminRepository;
 import org.example.library.repositories.BookRepository;
 import org.example.library.repositories.StudentRepository;
 import org.example.library.service.AdminService;
+import org.example.library.service.EmailSenderService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -41,6 +42,9 @@ public class AdminServiceImp implements AdminService {
 
     @Autowired
     private BookRepository bookRepository;
+
+    @Autowired
+    private EmailSenderService emailSenderService;
     @Override
     public AdminDto createAdmin(AdminDto adminDto)   {
        try{
@@ -57,7 +61,8 @@ public class AdminServiceImp implements AdminService {
 
     @Override
     public AdminDto getAdmin(Integer id) {
-            Admin admin= this.adminRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("user", "id", id));
+            Admin admin= this.adminRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Admin", "id", id));
+
             return modelMapper.map(admin,AdminDto.class);
     }
 
@@ -95,6 +100,20 @@ public class AdminServiceImp implements AdminService {
                         List<BookDto> bookDtos = student.getBooks().stream().map(book2 -> this.modelMapper.map(book2, BookDto.class)).collect(Collectors.toList());
                         StudentDto studentDto = modelMapper.map(student, StudentDto.class);
                         studentDto.setBooksDto(bookDtos);
+                        this.emailSenderService.sendSimpleEmail(
+                                studentDto.getEmail(),
+                                "Book id: " + bb.getBookId() + "\n" +
+                                        "Student Name: " + studentDto.getName() + "\n" +
+                                        "Book Name: " + bb.getBookName() + "\n" +
+                                        "Book semester: " + book.getBookSemester() + "\n" +
+                                        "Date of Issue: " + bb.getDateOfIssue() + "\n\n" +
+                                        "Thanks and Regards,\n" +
+                                        "Shashi Kumar\n" +
+                                        "Mob: 7073052300 \n",
+                                "Book Issued to Roll No "+student.getRoll()
+                        );
+
+
                         return studentDto;
                     }else{
                         throw  new ApiException("Already 10 books is issued to this student");
@@ -120,6 +139,20 @@ public class AdminServiceImp implements AdminService {
                 BookDto bb = this.modelMapper.map(save, BookDto.class);
                 bookDtos.add(bb);
                 studentDto.setBooksDto(bookDtos);
+                this.emailSenderService.sendSimpleEmail(
+                        studentDto.getEmail(),
+                        "Book id: " + bb.getBookId() + "\n" +
+                                "Student Name: " + studentDto.getName() + "\n" +
+                                "Book Name: " + bb.getBookName() + "\n" +
+                                "Book semester: " + book.getBookSemester() + "\n" +
+                                "Date of Issue: " + bb.getDateOfIssue() + "\n\n" +
+                                "Thanks and Regards,\n" +
+                                "Shashi Kumar\n" +
+                                "Mob: 7073052300 \n",
+                        "Book Issued to Roll No "+student.getRoll()
+                );
+                System.out.println("email is successfully send");
+
                 return studentDto;
 
             }
@@ -155,9 +188,25 @@ public class AdminServiceImp implements AdminService {
                 }else{
                     book.setDateOfSubmission(LocalDate.now());
                     student.setNoOfBookIssue(count-1);
-                    LocalDate dateOfIssue = LocalDate.of(2024, 1, 1);
-                    long daysDifference = ChronoUnit.DAYS.between(dateOfIssue, LocalDate.now());
-                    System.out.println(daysDifference);
+                    this.emailSenderService.sendSimpleEmail(
+                            student.getEmail(),
+                            "Book id: " + book.getBookId() + "\n" +
+                                    "Student Name: " + student.getName() + "\n" +
+                                    "Book Name: " + book.getBookName() + "\n" +
+                                    "Total days of hiring: " + book.getTotalDaysOfIssueBook() + "\n" +
+                                    "Book semester: " + book.getBookSemester() + "\n" +
+                                    "fine charge: "+book.getFine()+"\n"+
+                                    "Date of Issue: " + book.getDateOfIssue() + "\n" +
+                                    "Date of Submission: " + book.getDateOfSubmission() + "\n\n" +
+                                    "Thanks and Regards,\n" +
+                                    "Shashi Kumar\n" +
+                                    "Mob: 7073052300 \n",
+                            "Book submitted by Roll No "+student.getRoll()
+                    );
+                    System.out.println("email is successfully send");
+
+                    book.setTotalDaysOfIssueBook(0);
+                    book.setFine("0");
                     Book book1 = this.bookRepository.save(book);
 
                 }

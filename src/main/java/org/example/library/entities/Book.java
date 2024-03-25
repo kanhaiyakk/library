@@ -1,6 +1,9 @@
 package org.example.library.entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -32,6 +35,16 @@ public class Book {
     private LocalDate DateOfSubmission;
 
 
+
+
+    private int totalDaysOfIssueBook;
+
+
+    private String fine;
+
+    private int bookSemester;
+
+
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "books_roll")
     private Student student;
@@ -43,8 +56,12 @@ public class Book {
                 ", bookName='" + bookName + '\'' +
                 ", bookAuthor='" + bookAuthor + '\'' +
                 ", bookYear=" + bookYear +
-                ", dateOfIssue=" + DateOfIssue +
-                ", dateOfSubmission=" + DateOfSubmission +
+                ", DateOfIssue=" + DateOfIssue +
+                ", DateOfSubmission=" + DateOfSubmission +
+                ", student=" + student +
+                ", totalDaysOfIssueBook=" + totalDaysOfIssueBook +
+                ", fine='" + fine + '\'' +
+                ", BookSemester=" + bookSemester +
                 '}';
     }
 }
