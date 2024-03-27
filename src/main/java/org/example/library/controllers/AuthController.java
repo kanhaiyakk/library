@@ -1,6 +1,7 @@
 package org.example.library.controllers;
 
 
+import org.example.library.payload.ApiResponse;
 import org.example.library.payload.JwtRequest;
 import org.example.library.payload.JwtResponse;
 import org.example.library.security.JwtHelper;
@@ -12,6 +13,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -28,25 +30,25 @@ public class AuthController {
     @Autowired
     private JwtHelper helper;
 
-//    private Logger logger = LoggerFactory.getLogger(AuthController.class);
-
 
     @PostMapping("/login")
     public ResponseEntity<JwtResponse> login(@RequestBody JwtRequest request) {
 
         this.doAuthenticate(request.getEmail(), request.getPassword());
 
-
         UserDetails userDetails = userDetailsService.loadUserByUsername(request.getEmail());
+
         String token = this.helper.generateToken(userDetails);
 
         JwtResponse response = JwtResponse.builder()
                 .jwtToken(token)
                 .username(userDetails.getUsername()).build();
+
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     private void doAuthenticate(String email, String password) {
+
 
         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(email, password);
         try {
@@ -60,7 +62,8 @@ public class AuthController {
     }
 
     @ExceptionHandler(BadCredentialsException.class)
-    public String exceptionHandler() {
-        return "Credentials Invalid !!";
+    public ResponseEntity<ApiResponse> exceptionHandler() {
+        ApiResponse api= new ApiResponse("Invalid Credential",false);
+        return new ResponseEntity<>(api,HttpStatus.BAD_REQUEST);
     }
 }

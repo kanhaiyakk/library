@@ -1,5 +1,7 @@
 package org.example.library.controllers;
 
+import org.example.library.exceptions.ApiException;
+import org.example.library.payload.ApiResponse;
 import org.example.library.payload.JwtRequest;
 import org.example.library.payload.JwtResponse;
 import org.example.library.security.JwtHelper;
@@ -11,6 +13,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -28,27 +31,32 @@ public class StudentAuthController {
     @Autowired
     private JwtHelper helper;
 
-//    private Logger logger = LoggerFactory.getLogger(AuthController.class);
 
-
-    @PostMapping("/login")
+    @PostMapping("/log")
     public ResponseEntity<JwtResponse> login(@RequestBody JwtRequest request) {
 
         this.doAuthenticate(request.getEmail(), request.getPassword());
-
+        System.out.println("aaaoooo");
 
         UserDetails userDetails = userDetailsService.loadUserByUsername(request.getEmail());
+
+
+
         String token = this.helper.generateToken(userDetails);
 
         JwtResponse response = JwtResponse.builder()
                 .jwtToken(token)
                 .username(userDetails.getUsername()).build();
         return new ResponseEntity<>(response, HttpStatus.OK);
+
     }
 
     private void doAuthenticate(String email, String password) {
 
+
         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(email, password);
+        System.out.println(authentication+"authen");
+
         try {
             manager.authenticate(authentication);
 
@@ -60,8 +68,10 @@ public class StudentAuthController {
     }
 
     @ExceptionHandler(BadCredentialsException.class)
-    public String exceptionHandler() {
-        return "Credentials Invalid !!";
+    public ResponseEntity<ApiResponse> exceptionHandler() {
+
+        ApiResponse apiResponse = new ApiResponse("Invalid Credentials", false);
+        return new ResponseEntity<>(apiResponse, HttpStatus.BAD_REQUEST);
     }
 }
 

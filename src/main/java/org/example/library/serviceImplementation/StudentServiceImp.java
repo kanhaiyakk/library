@@ -5,6 +5,7 @@ import org.example.library.dto.StudentDto;
 import org.example.library.entities.Student;
 import org.example.library.exceptions.ApiException;
 import org.example.library.exceptions.ResourceNotFoundException;
+//import org.example.library.repositories.RoleRepository;
 import org.example.library.repositories.StudentRepository;
 import org.example.library.service.StudentService;
 import org.modelmapper.ModelMapper;
@@ -28,18 +29,24 @@ public class StudentServiceImp implements StudentService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+//    @Autowired
+//    private RoleRepository roleRepository;
+
 
     @Override
     public StudentDto createStudent(StudentDto studentDto) {
         Student student = modelMapper.map(studentDto, Student.class);
         try {
-            student.setPassword(passwordEncoder.encode(student.getPassword()));
+
             if (studentRepository.existsByEmail(studentDto.getEmail())) {
                 throw new DataIntegrityViolationException("A student with the provided email already exists.");
             }
             if (studentRepository.existsByPhoneNumber(studentDto.getPhoneNumber())) {
                 throw new DataIntegrityViolationException("A student with the provided phone number already exists.");
             }
+//            Role role = this.roleRepository.findById(2).get();
+//            student.getRoles().add(role);
+            student.setPassword(passwordEncoder.encode(student.getPassword()));
             Student savedStudent = this.studentRepository.save(student);
             return modelMapper.map(savedStudent, StudentDto.class);
         } catch (DataIntegrityViolationException ex) {
@@ -86,7 +93,8 @@ public class StudentServiceImp implements StudentService {
             return studentDto;
         }).collect(Collectors.toList());
 
-        return studentDto1;
+        return studentDto1
+                ;
 
     }
 

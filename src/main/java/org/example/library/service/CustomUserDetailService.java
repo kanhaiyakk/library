@@ -13,6 +13,7 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -23,6 +24,8 @@ public class CustomUserDetailService implements UserDetailsService {
     @Autowired
     private StudentRepository studentRepository;
 
+    @Autowired
+    PasswordEncoder passwordEncoder;
 
 
     @Override
@@ -30,7 +33,12 @@ public class CustomUserDetailService implements UserDetailsService {
         Admin admin = this.adminRepository.findByAdminEmail(username).orElse(null);
         Student student = this.studentRepository.findByEmail(username).orElse(null);
 
+
         if (admin != null) {
+            UserDetails build = User.withUsername(admin.getAdminEmail())
+                    .password(admin.getAdminPassword())
+                    .build();
+            System.out.println(build);
             return User.withUsername(admin.getAdminEmail())
                     .password(admin.getAdminPassword())
                     .build();

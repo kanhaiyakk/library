@@ -9,11 +9,14 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.example.library.entities.Book;
+//import org.example.library.entities.Role;
 
 
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 
 @Data
@@ -47,5 +50,7 @@ public class StudentDto {
 
 
     private List<BookDto> booksDto= new ArrayList<>();
+
+//    private Set<Role> roles = new HashSet<>();
 
 }
