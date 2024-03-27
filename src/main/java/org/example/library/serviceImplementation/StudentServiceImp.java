@@ -2,10 +2,13 @@ package org.example.library.serviceImplementation;
 
 import org.example.library.dto.BookDto;
 import org.example.library.dto.StudentDto;
+import org.example.library.entities.Role;
 import org.example.library.entities.Student;
 import org.example.library.exceptions.ApiException;
 import org.example.library.exceptions.ResourceNotFoundException;
 //import org.example.library.repositories.RoleRepository;
+import org.example.library.repositories.AdminRepository;
+import org.example.library.repositories.RoleRepository;
 import org.example.library.repositories.StudentRepository;
 import org.example.library.service.StudentService;
 import org.modelmapper.ModelMapper;
@@ -29,23 +32,29 @@ public class StudentServiceImp implements StudentService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-//    @Autowired
-//    private RoleRepository roleRepository;
+    @Autowired
+    private RoleRepository roleRepository;
+
+    @Autowired
+    private AdminRepository adminRepository;
 
 
     @Override
     public StudentDto createStudent(StudentDto studentDto) {
         Student student = modelMapper.map(studentDto, Student.class);
         try {
+            if(this.adminRepository.existsByAdminEmail(student.getEmail())){
+                throw new DataIntegrityViolationException("A student with the provided email already exists.");
+            }
 
             if (studentRepository.existsByEmail(studentDto.getEmail())) {
                 throw new DataIntegrityViolationException("A student with the provided email already exists.");
             }
-            if (studentRepository.existsByPhoneNumber(studentDto.getPhoneNumber())) {
+           if (studentRepository.existsByPhoneNumber(studentDto.getPhoneNumber())) {
                 throw new DataIntegrityViolationException("A student with the provided phone number already exists.");
             }
-//            Role role = this.roleRepository.findById(2).get();
-//            student.getRoles().add(role);
+            Role role = this.roleRepository.findById(2).get();
+            student.getRoles().add(role);
             student.setPassword(passwordEncoder.encode(student.getPassword()));
             Student savedStudent = this.studentRepository.save(student);
             return modelMapper.map(savedStudent, StudentDto.class);

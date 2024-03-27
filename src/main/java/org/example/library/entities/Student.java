@@ -51,9 +51,9 @@ public class Student implements  UserDetails {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "student")
     private List<Book> books= new ArrayList<>();
 
-//    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-//    @JoinTable(name = "student_role", joinColumns = @JoinColumn(name = "student_roll", referencedColumnName = "roll"), inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
-//    private Set<Role> roles = new HashSet<>();
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinTable(name = "student_role", joinColumns = @JoinColumn(name = "student_roll", referencedColumnName = "roll"), inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
+    private Set<Role> roles = new HashSet<>();
 
 
     @Override

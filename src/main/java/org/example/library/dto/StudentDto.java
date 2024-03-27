@@ -9,6 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.example.library.entities.Book;
+import org.example.library.entities.Role;
 //import org.example.library.entities.Role;
 
 
@@ -48,9 +49,9 @@ public class StudentDto {
     @NotNull(message = "no of issue book can't be empty")
     private int noOfBookIssue;
 
-
+    private Set<Role> roles = new HashSet<>();
     private List<BookDto> booksDto= new ArrayList<>();
 
-//    private Set<Role> roles = new HashSet<>();
+
 
 }

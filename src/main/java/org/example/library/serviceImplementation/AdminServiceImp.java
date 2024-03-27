@@ -51,11 +51,17 @@ public class AdminServiceImp implements AdminService {
     @Autowired
     private RoleRepository roleRepository;
 
+
+
     @Override
     public AdminDto createAdmin(AdminDto adminDto) {
+        if(this.studentRepository.existsByEmail(adminDto.getAdminEmail())){
+            throw  new ApiException("email is already exits :"+ adminDto.getAdminEmail());
+        }
         try {
             Role role = this.roleRepository.findById(1).orElseThrow(() -> new ResourceNotFoundException("role", "roleId", 1));
             Admin admin = modelMapper.map(adminDto, Admin.class);
+
             admin.setAdminPassword(passwordEncoder.encode(admin.getAdminPassword()));
             admin.getRoles().add(role);
             Admin saveAmin = adminRepository.save(admin);
