@@ -58,8 +58,11 @@ public class Student implements  UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        List<SimpleGrantedAuthority> authories = this.roles.stream()
+                .map((role) -> new SimpleGrantedAuthority(role.getName())).collect(Collectors.toList());
+        return authories;
     }
+
 
     @Override
     public String getUsername() {

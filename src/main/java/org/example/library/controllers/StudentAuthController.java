@@ -36,12 +36,9 @@ public class StudentAuthController {
     public ResponseEntity<JwtResponse> login(@RequestBody JwtRequest request) {
 
         this.doAuthenticate(request.getEmail(), request.getPassword());
-        System.out.println("aaaoooo");
 
         UserDetails userDetails = userDetailsService.loadUserByUsername(request.getEmail());
-
-
-
+        System.out.println(userDetails);
         String token = this.helper.generateToken(userDetails);
 
         JwtResponse response = JwtResponse.builder()

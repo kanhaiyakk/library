@@ -76,6 +76,8 @@ public class AdminServiceImp implements AdminService {
     @Override
     public AdminDto getAdmin(Integer id) {
         Admin admin = this.adminRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Admin", "id", id));
+        System.out.println(admin.getRoles()+" admin roles"+id);
+
         return modelMapper.map(admin, AdminDto.class);
     }
 
@@ -243,7 +245,7 @@ public class AdminServiceImp implements AdminService {
 
         List<AdminDto> adminDto = this.adminRepository.findAll()
                 .stream().map((admin) -> this.modelMapper.map(admin, AdminDto.class)).collect(Collectors.toList());
-
+        System.out.println(adminDto);
         return adminDto;
     }
 }

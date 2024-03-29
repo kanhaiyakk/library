@@ -28,11 +28,11 @@ public class CustomUserDetailService implements UserDetailsService {
     PasswordEncoder passwordEncoder;
 
 
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Admin admin = this.adminRepository.findByAdminEmail(username).orElse(null);
         Student student = this.studentRepository.findByEmail(username).orElse(null);
-
 
         if (admin != null) {
             UserDetails build = User.withUsername(admin.getAdminEmail())
