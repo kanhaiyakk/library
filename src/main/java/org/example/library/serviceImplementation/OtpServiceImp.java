@@ -71,7 +71,7 @@ public class OtpServiceImp implements OtpService {
 
         otp = generateRandomOtp();
         otpMap.put(email,otp);
-        emailSenderService.sendSimpleEmail(email,"OTP: "+otp,"OTP for LOGIN");
+        emailSenderService.sendSimpleEmail(email,"OTP: "+otp,"OTP for LOGIN"+"\n"+"otp is valid for 5 min only");
         creationTime = LocalDateTime.now();
         return  new OtpResponse(otp,creationTime,"OTP is send Successfully to respective email",email);
     }

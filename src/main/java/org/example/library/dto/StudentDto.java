@@ -2,6 +2,8 @@ package org.example.library.dto;
 
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
@@ -27,7 +29,7 @@ import java.util.Set;
 public class StudentDto {
 
 
-
+    private Integer roll;
     @NotBlank(message = "name should not be blank")
     @Size(min = 3, max = 12, message = "name should be 3 to 12 character")
     private String name;
@@ -51,6 +53,16 @@ public class StudentDto {
 
     private Set<Role> roles = new HashSet<>();
     private List<BookDto> booksDto= new ArrayList<>();
+
+    @JsonIgnore
+    public String getPassword() {
+        return this.password;
+    }
+
+    @JsonProperty
+    public void setPassword(String password) {
+        this.password=password;
+    }
 
 
 

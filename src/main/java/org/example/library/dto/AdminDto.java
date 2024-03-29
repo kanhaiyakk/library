@@ -1,5 +1,7 @@
 package org.example.library.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
@@ -29,6 +31,19 @@ public class AdminDto {
     private  String adminPassword;
 
     private Set<Role> roles = new HashSet<>();
+
+    @JsonIgnore
+    public String getAdminPassword() {
+        return adminPassword;
+    }
+
+    @JsonProperty
+    public void setAdminPassword(String adminPassword) {
+        this.adminPassword = adminPassword;
+    }
+
+
+
 
 
 }
