@@ -213,8 +213,8 @@ public class AdminServiceImp implements AdminService {
                                     "Date of Issue: " + book.getDateOfIssue() + "\n" +
                                     "Date of Submission: " + book.getDateOfSubmission() + "\n\n" +
                                     "Thanks and Regards,\n" +
-                                    "Shashi Kumar\n" +
-                                    "Mob: 7073052300 \n",
+                                    "Kanhaiya Kumar\n" +
+                                    "Mob: 8804936144 \n",
                             "Book submitted by Roll No " + student.getRoll()
                     );
                     System.out.println("email is successfully send");
