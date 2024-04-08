@@ -123,8 +123,8 @@ public class AdminServiceImp implements AdminService {
                                     "Book semester: " + book.getBookSemester() + "\n" +
                                     "Date of Issue: " + bb.getDateOfIssue() + "\n\n" +
                                     "Thanks and Regards,\n" +
-                                    "Shashi Kumar\n" +
-                                    "Mob: 7073052300 \n",
+                                    "Kanhaiya Kumar\n" +
+                                    "Mob: 8804936144 \n",
                             "Book Issued to Roll No " + student.getRoll()
                     );
 
@@ -162,8 +162,8 @@ public class AdminServiceImp implements AdminService {
                             "Book semester: " + book.getBookSemester() + "\n" +
                             "Date of Issue: " + bb.getDateOfIssue() + "\n\n" +
                             "Thanks and Regards,\n" +
-                            "Shashi Kumar\n" +
-                            "Mob: 7073052300 \n",
+                            "Kanhaiya Kumar\n" +
+                            "Mob: 8804936144 \n",
                     "Book Issued to Roll No " + student.getRoll()
             );
             System.out.println("email is successfully send");
